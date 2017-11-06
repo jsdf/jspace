@@ -7,15 +7,25 @@ import java.util.HashSet;
 import java.util.ArrayList;
 
 public class Game {
+    // the AWT graphics object which we can use to draw stuff. this is set in the Main class
 	public Graphics graphics;
+    // the screen width. this is set in the Main class
 	public int screenWidth = 800;
+    // the screen height. this is set in the Main class
 	public int screenHeight = 600;
+	// the keyboard keys currently pressed. this is set in the Main class
 	public HashSet<String> keysDown;
+	// to keep track of when the last enemy spawned, so we know if its time to spawn another
 	private double lastEnemySpawnTime = 0;
+	// time since the game started running
 	private double time = 0;
+	// a mapping of the types of game object to their images
 	private HashMap<GameObject.Type, BufferedImage> images;
+	// a list of all the game objects currently in the game world
 	private ArrayList<GameObject> worldObjects;
+	// the player
 	private GameObject player;
+	// a list of the enemy game object types, which we'll use when randomly selecting one
 	private static final GameObject.Type[] ENEMY_TYPES = {
         GameObject.Type.ship1,
         GameObject.Type.ship2,
@@ -29,7 +39,8 @@ public class Game {
 
 
 	Game() {
-		// load all the images
+		// load all the images and put them into a map of gameobject type to image
+        // then later we can look up the image for a type of gameobject by calling this.images.get(type)
 		this.images = new HashMap<GameObject.Type, BufferedImage>();
 		this.images.put(GameObject.Type.player, Utils.loadImage("images/ship5.png"));
 		this.images.put(GameObject.Type.ship1, Utils.loadImage("images/ship1.png"));
@@ -48,17 +59,26 @@ public class Game {
 		this.spawnPlayer();
 	}
 
+    // this gets called 60 times a second, before this.draw()
 	public void update(double dt) {
 		this.time += dt;
+
+        // to prevent the world from getting filled up with junk which is far off the screen,
+        // we'll go through and check if each object is out of bounds, and then remove it if it is.
 		this.removeOutOfBoundsObjects();
+		// spawn enemies if it is time to do so
 		this.updateEnemySpawning(dt);
+		// move player or fire a shot based on keys pressed, make sure they don't go out of bounds
 		this.updatePlayer(dt);
+		// move all of the enemies and projectiles based on the rules they follow
 		this.updateWorldObjects(dt);
+		// check if any objects are colliding with any others and take appropriate action
 		this.updateCollisionDetection();
 	}
 
 	private void updatePlayer(double dt) {
-		Vector2d playerInput= new Vector2d(0, 0);
+	    // figure out what movement should be applied to the player based on the keys pressed
+		Vector2d playerInput = new Vector2d(0, 0);
 		if (this.keysDown.contains("W")) {
 			playerInput = playerInput.add(new Vector2d(0, -1));
 		}
@@ -72,7 +92,14 @@ public class Game {
 			playerInput = playerInput.add(new Vector2d(1, 0));
 		}
 
-		this.player.position = this.player.position.add(playerInput.normalize().multiplyScalar(this.player.getSpeed() * dt));
+		// multiply speed by delta time (time since last frame) so we know how far to move
+		double howFarToMove = this.player.getSpeed() * dt;
+		// the normalizing the vector of directional input (WASD keys) ensures that the player
+        // doesn't move faster when pressing two directions at once.
+		Vector2d direction = playerInput.normalize();
+
+		// apply change to player position
+		this.player.position = this.player.position.add(direction.multiplyScalar(howFarToMove));
 
 		BufferedImage playerImage = this.images.get(GameObject.Type.player);
 		double minX = 0 + playerImage.getWidth() / 2; // left boundary
@@ -184,7 +211,6 @@ public class Game {
 				obj.position.y < 0 - OFFSCREEN_SPACE ||
 				obj.position.y > this.screenHeight + OFFSCREEN_SPACE
 			) {
-				// System.out.println("removing "+obj.toString());
 				objectsToRemove.add(obj);
 			}
 		}
@@ -193,6 +219,7 @@ public class Game {
 
 	private void destroyPlayer() {
 	    System.out.println("ded");
+	    // we don't have a game over screen, just restart the game
 		this.reset();
 	}
 
@@ -205,11 +232,17 @@ public class Game {
 	}
 
 	private void updateCollisionDetection() {
+	    // iterate over a copy of the world objects arraylist because we might add or remove some items
+        // but you can't add or remove items from the list you're currently iterating
         ArrayList<GameObject> copyOfWorldObjects = new ArrayList<>(this.worldObjects);
+
+        // basically, check every world object against every other one using this.collision() to find out
+        // if they overlap. if they do, then do something specific to the kinds of objects which are colliding.
 		for (GameObject obj: copyOfWorldObjects) {
 			for (GameObject otherObj: copyOfWorldObjects) {
 				if (obj != otherObj) {
 					if (this.collision(obj, otherObj)) {
+					    // okay, these two are colliding, what do?
 						if (
 							obj.category == GameObject.Category.player
 							&& otherObj.category == GameObject.Category.enemy
@@ -236,7 +269,34 @@ public class Game {
 
 	}
 
+    // checks for rectangular overlap between two objects
+    private boolean collision(GameObject a, GameObject b) {
+        // work out the corners (x1,x2,y1,y1) of each rectangle
+        double aWidth = this.images.get(a.type).getWidth();
+        double aHeight = this.images.get(a.type).getHeight();
+        double ax1 = a.position.x - aWidth/2;
+        double ax2 = a.position.x + aWidth/2;
+        double ay1 = a.position.y - aHeight/2;
+        double ay2 = a.position.y + aHeight/2;
+
+        double bWidth = this.images.get(b.type).getWidth();
+        double bHeight = this.images.get(b.type).getHeight();
+        double bx1 = b.position.x - bWidth/2;
+        double bx2 = b.position.x + bWidth/2;
+        double by1 = b.position.y - bHeight/2;
+        double by2 = b.position.y + bHeight/2;
+
+        return !(
+            ax1 > bx2 ||
+            bx1 > ax2 ||
+            ay1 > by2 ||
+            by1 > ay2
+        );
+    }
+
+    // this gets called 60 times a second, after this.update()
 	public void draw() {
+	    // the black void of space
 		this.drawBackground();
 
 		// first draw all projectiles
@@ -275,30 +335,5 @@ public class Game {
 			(int)y,
 			null
 		);
-	}
-
-	// checks for rectangular overlap between two objects
-	private boolean collision(GameObject a, GameObject b) {
-		// work out the corners (x1,x2,y1,y1) of each rectangle
-		double aWidth = this.images.get(a.type).getWidth();
-		double aHeight = this.images.get(a.type).getHeight();
-		double ax1 = a.position.x - aWidth/2;
-		double ax2 = a.position.x + aWidth/2;
-		double ay1 = a.position.y - aHeight/2;
-		double ay2 = a.position.y + aHeight/2;
-
-		double bWidth = this.images.get(b.type).getWidth();
-		double bHeight = this.images.get(b.type).getHeight();
-		double bx1 = b.position.x - bWidth/2;
-		double bx2 = b.position.x + bWidth/2;
-		double by1 = b.position.y - bHeight/2;
-		double by2 = b.position.y + bHeight/2;
-
-		return !(
-            ax1 > bx2 ||
-            bx1 > ax2 ||
-            ay1 > by2 ||
-            by1 > ay2
-        );
 	}
 }

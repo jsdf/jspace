@@ -23,6 +23,7 @@ public class Vector2d {
         );
     }
 
+    // useful for finding the direction to one vector from another
     public Vector2d subtract(Vector2d other) {
         return new Vector2d(
                 this.x - other.x,
@@ -37,6 +38,8 @@ public class Vector2d {
         );
     }
 
+    // when you want to keep the direction of a vector, but discard the magnitude
+    // you want the 'unit vector' aka 'normalized vector'
     public Vector2d normalize() {
         if (this.x == 0 && this.y == 0) {
             return new Vector2d(0, 0);

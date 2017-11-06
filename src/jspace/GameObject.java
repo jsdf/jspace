@@ -4,9 +4,13 @@ package jspace;
  * This is an object in the game world, like an enemy, a projectile, or the player
  */
 public class GameObject {
+    // x,y position in the game world
     public Vector2d position;
+    // the category of object this is (player, enemy, projectile)
     public Category category;
+    // the type of object this is (there are multiple enemy and projectile types)
     public Type type;
+    // time that this thing last fired a projectile. used to out when they can fire another.
     public double lastShot = 0;
 
     public enum Category {
@@ -31,7 +35,7 @@ public class GameObject {
         this.type = type;
     }
 
-
+    // get the speed this thing can move, based on what type it is
     public int getSpeed() {
         switch (this.type) {
             case player: return 150;
@@ -45,6 +49,7 @@ public class GameObject {
         return 0;
     }
 
+    // get the cooldown time before this thing can shoot again, based on what type it is
     public double getCooldownTime() {
         switch (this.type) {
             case player: return 0.2;
@@ -56,6 +61,7 @@ public class GameObject {
         return 0;
     }
 
+    // useful for logging what thing this is, for debugging
     @Override
     public String toString() {
         return super.toString() + " at " + this.position.toString();
