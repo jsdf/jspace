@@ -2,29 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2036d29e-e33f-4a04-9d18-81c09f3ce983" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/projectile1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/projectile2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/projectile3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/ship1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/ship2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/ship3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/ship4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/ship5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/shipsall_4.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/description.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/project-template.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jspace.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/jspace/Game.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/jspace/GameObject.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/jspace/Main.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/jspace/Utils.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/jspace/Vector2d.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/jspace/GameObject.java" afterPath="$PROJECT_DIR$/src/jspace/GameObject.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -56,10 +34,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Game.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Game.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/jspace/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1989">
+            <state relative-caret-position="-817">
               <caret line="120" column="35" lean-forward="true" selection-start-line="120" selection-start-column="35" selection-end-line="120" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -75,11 +53,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameObject.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GameObject.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/jspace/GameObject.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="6" column="18" lean-forward="false" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+            <state relative-caret-position="96">
+              <caret line="36" column="34" lean-forward="false" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
               <folding>
                 <element signature="e#1333#1334#0" expanded="true" />
                 <element signature="e#1408#1409#0" expanded="true" />
@@ -397,17 +375,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/jspace/GameObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" column="18" lean-forward="false" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
-          <folding>
-            <element signature="e#1333#1334#0" expanded="true" />
-            <element signature="e#1408#1409#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/jspace/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-89">
@@ -428,7 +395,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/jspace/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1989">
+        <state relative-caret-position="-817">
           <caret line="120" column="35" lean-forward="true" selection-start-line="120" selection-start-column="35" selection-end-line="120" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -439,6 +406,17 @@
             <element signature="e#6883#6884#0" expanded="true" />
             <element signature="e#6941#6942#0" expanded="true" />
             <element signature="e#6984#6985#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jspace/GameObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="36" column="34" lean-forward="false" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
+          <folding>
+            <element signature="e#1333#1334#0" expanded="true" />
+            <element signature="e#1408#1409#0" expanded="true" />
           </folding>
         </state>
       </provider>

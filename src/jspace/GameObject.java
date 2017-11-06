@@ -34,7 +34,7 @@ public class GameObject {
 
     public int getSpeed() {
         switch (this.type) {
-            case player: return 100;
+            case player: return 150;
             case ship1: return 30;
             case ship2: return 50;
             case ship3: return 60;
