@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Game {
 	public Graphics graphics;
@@ -14,13 +14,13 @@ public class Game {
 	private double lastEnemySpawnTime = 0;
 	private double time = 0;
 	private HashMap<GameObject.Type, BufferedImage> images;
-	private Vector<GameObject> worldObjects;
+	private ArrayList<GameObject> worldObjects;
 	private GameObject player;
 	private static final GameObject.Type[] ENEMY_TYPES = {
-			GameObject.Type.ship1,
-			GameObject.Type.ship2,
-			GameObject.Type.ship3,
-			GameObject.Type.ship4,
+        GameObject.Type.ship1,
+        GameObject.Type.ship2,
+        GameObject.Type.ship3,
+        GameObject.Type.ship4,
 	};
 	// how often enemies spawn (in seconds)
 	private static final int ENEMY_SPAWN_INTERVAL = 3;
@@ -44,7 +44,7 @@ public class Game {
 
 	private void reset() {
 		// init world
-		this.worldObjects = new Vector<GameObject>();
+		this.worldObjects = new ArrayList<GameObject>();
 		this.spawnPlayer();
 	}
 
@@ -126,8 +126,8 @@ public class Game {
 	private void updateWorldObjects(double dt) {
 		// copy the list of world objects before updating them, because we might
 		// add new objects to the world while iterating it (eg. projectiles) and
-		// modifying a vector we're iterating is not allowed
-		Vector<GameObject> copyOfWorldObjects = (Vector)this.worldObjects.clone();
+		// modifying a arraylist we're iterating is not allowed
+		ArrayList<GameObject> copyOfWorldObjects = new ArrayList<>(this.worldObjects);
 		for (GameObject obj: copyOfWorldObjects) {
 			if (obj.category == GameObject.Category.enemy) {
 				this.updateEnemy(obj, dt);
@@ -175,7 +175,7 @@ public class Game {
 	}
 
 	private void removeOutOfBoundsObjects() {
-		Vector<GameObject> objectsToRemove = new Vector<GameObject>();
+        ArrayList<GameObject> objectsToRemove = new ArrayList<GameObject>();
 		for (int i = 0; i < this.worldObjects.size(); i++) {
 			GameObject obj = this.worldObjects.get(i);
 			if (
@@ -184,7 +184,7 @@ public class Game {
 				obj.position.y < 0 - OFFSCREEN_SPACE ||
 				obj.position.y > this.screenHeight + OFFSCREEN_SPACE
 			) {
-				System.out.println("removing "+obj.toString());
+				// System.out.println("removing "+obj.toString());
 				objectsToRemove.add(obj);
 			}
 		}
@@ -192,6 +192,7 @@ public class Game {
 	}
 
 	private void destroyPlayer() {
+	    System.out.println("ded");
 		this.reset();
 	}
 
@@ -204,7 +205,7 @@ public class Game {
 	}
 
 	private void updateCollisionDetection() {
-		Vector<GameObject> copyOfWorldObjects = (Vector)this.worldObjects.clone();
+        ArrayList<GameObject> copyOfWorldObjects = new ArrayList<>(this.worldObjects);
 		for (GameObject obj: copyOfWorldObjects) {
 			for (GameObject otherObj: copyOfWorldObjects) {
 				if (obj != otherObj) {
