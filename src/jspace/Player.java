@@ -1,6 +1,9 @@
 package jspace;
 
-public class Player extends ShootingObject {
+public class Player extends GameObject {
+    // time that player last fired a projectile. used to figure out when they can fire another.
+    public double lastShot = 0;
+
     Player() {
         super(Type.player);
     }

@@ -192,7 +192,14 @@ public class Game {
 		projectile.position = source.position.copy();
 		this.worldObjects.add(projectile);
 
-        (source instanceof Player ? (Player)source : (Enemy)source).lastShot = this.time;
+		if (source instanceof Player) {
+		    this.player.lastShot = this.time;
+        } else if (source instanceof Enemy) {
+		    Enemy enemy = (Enemy)source;
+            enemy.lastShot = this.time;
+        } else {
+            throw new RuntimeException("invalid projectile source");
+        }
 	}
 
 	private void removeOutOfBoundsObjects() {
