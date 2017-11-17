@@ -117,10 +117,7 @@ public class Game {
 	}
 
 	private void spawnPlayer() {
-		this.player = new GameObject(
-			GameObject.Category.player,
-			GameObject.Type.player
-		);
+		this.player = new Player();
 		// start in the middle of the screen
 		this.player.position.x = this.screenWidth / 2;
 		this.player.position.y = this.screenHeight / 2;
@@ -141,7 +138,7 @@ public class Game {
 	}
 
 	private void spawnEnemy(GameObject.Type type) {
-		GameObject enemy = new GameObject(GameObject.Category.enemy, type);
+		GameObject enemy = new Enemy(type);
 		// give enemy random position at top of screen
 		enemy.position.x = Math.random() * this.screenWidth;
 		enemy.position.y = -100; // off top of screen
@@ -191,8 +188,7 @@ public class Game {
 			? GameObject.Type.player_projectile
 			: GameObject.Type.enemy_projectile;
 
-		GameObject projectile = new GameObject(
-			GameObject.Category.projectile,
+		GameObject projectile = new Projectile(
 			projectileType
 		);
 		projectile.position = source.position.copy();
