@@ -24,7 +24,7 @@ public class Game {
 	// a list of all the game objects currently in the game world
 	private ArrayList<GameObject> worldObjects;
 	// the player
-	private GameObject player;
+	private Player player;
 	// a list of the enemy game object types, which we'll use when randomly selecting one
 	private static final GameObject.Type[] ENEMY_TYPES = {
         GameObject.Type.ship1,
@@ -138,7 +138,7 @@ public class Game {
 	}
 
 	private void spawnEnemy(GameObject.Type type) {
-		GameObject enemy = new Enemy(type);
+		Enemy enemy = new Enemy(type);
 		// give enemy random position at top of screen
 		enemy.position.x = Math.random() * this.screenWidth;
 		enemy.position.y = -100; // off top of screen
@@ -153,16 +153,16 @@ public class Game {
 		// modifying a arraylist we're iterating is not allowed
 		ArrayList<GameObject> copyOfWorldObjects = new ArrayList<>(this.worldObjects);
 		for (GameObject obj: copyOfWorldObjects) {
-			if (obj.category == GameObject.Category.enemy) {
-				this.updateEnemy(obj, dt);
+			if (obj instanceof Enemy) {
+				this.updateEnemy((Enemy)obj, dt);
 			}
-			if (obj.category == GameObject.Category.projectile) {
-				this.updateProjectile(obj, dt);
+			if (obj instanceof Projectile) {
+				this.updateProjectile((Projectile)obj, dt);
 			}
 		}
 	}
 
-	private void updateEnemy(GameObject enemy, double dt) {
+	private void updateEnemy(Enemy enemy, double dt) {
 		// enemies move downward
 		double enemySpeed = enemy.getSpeed();
 		enemy.position.y += enemySpeed * dt;
@@ -177,24 +177,24 @@ public class Game {
 		}
 	}
 
-	private void updateProjectile(GameObject projectile, double dt) {
+	private void updateProjectile(Projectile projectile, double dt) {
 		// player projectiles go up, enemy projectiles go down
 		int direction = projectile.type == GameObject.Type.player_projectile ? -1 : 1;
 		projectile.position.y += projectile.getSpeed() * dt * direction;
 	}
 
 	private void fireProjectile(GameObject source) {
-		GameObject.Type projectileType = source.category == GameObject.Category.player
+		GameObject.Type projectileType = source instanceof Player
 			? GameObject.Type.player_projectile
 			: GameObject.Type.enemy_projectile;
 
-		GameObject projectile = new Projectile(
+		Projectile projectile = new Projectile(
 			projectileType
 		);
 		projectile.position = source.position.copy();
 		this.worldObjects.add(projectile);
 
-		source.lastShot = this.time;
+        (source instanceof Player ? (Player)source : (Enemy)source).lastShot = this.time;
 	}
 
 	private void removeOutOfBoundsObjects() {
@@ -240,20 +240,20 @@ public class Game {
 					if (this.collision(obj, otherObj)) {
 					    // okay, these two are colliding, what do?
 						if (
-							obj.category == GameObject.Category.player
-							&& otherObj.category == GameObject.Category.enemy
+                            obj instanceof Player
+							&& otherObj instanceof Enemy
 						) {
 							this.destroyPlayer();
-						} else if (obj.category == GameObject.Category.projectile) {
+						} else if (obj instanceof Projectile) {
 							if (
 								obj.type == GameObject.Type.player_projectile
-								&& otherObj.category == GameObject.Category.enemy
+								&& otherObj instanceof Enemy
 							) {
 								this.destroyEnemy(otherObj);
 								this.destroyProjectile(obj);
 							} else if (
 								obj.type == GameObject.Type.enemy_projectile
-								&& otherObj.category == GameObject.Category.player
+								&& otherObj instanceof Player
 							) {
 								this.destroyPlayer();
 							}
@@ -297,13 +297,13 @@ public class Game {
 
 		// first draw all projectiles
 		for (GameObject obj : this.worldObjects) {
-			if (obj.category == GameObject.Category.projectile) {
+			if (obj instanceof Projectile) {
 				this.drawObject(obj);
 			}
 		}
-		// then draw everything else (ships) on top
+		// then draw everything else (ships/player) on top
 		for (GameObject obj : this.worldObjects) {
-			if (obj.category != GameObject.Category.projectile) {
+			if (!(obj instanceof Projectile)) {
 				this.drawObject(obj);
 			}
 		}

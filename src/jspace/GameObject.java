@@ -6,18 +6,8 @@ package jspace;
 public class GameObject {
     // x,y position in the game world
     public Vector2d position;
-    // the category of object this is (player, enemy, projectile)
-    public Category category;
     // the type of object this is (there are multiple enemy and projectile types)
     public Type type;
-    // time that this thing last fired a projectile. used to out when they can fire another.
-    public double lastShot = 0;
-
-    public enum Category {
-        player,
-        enemy,
-        projectile,
-    }
 
     public enum Type {
         player,
@@ -29,9 +19,8 @@ public class GameObject {
         enemy_projectile,
     }
 
-    GameObject(Category category, Type type) {
+    GameObject(Type type) {
         this.position = new Vector2d(0, 0);
-        this.category = category;
         this.type = type;
     }
 
