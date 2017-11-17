@@ -1,10 +1,11 @@
 package jspace;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
+import java.util.concurrent.locks.*;
 
 public class Main extends JFrame {
     Game game;
@@ -12,6 +13,7 @@ public class Main extends JFrame {
     JPanel viewport;
     KeyboardEventListener keyListener;
     HashSet<String> keysDown;
+    private Lock redrawLock = new ReentrantLock();
 
     Main() {
         this.game = new Game();
@@ -42,10 +44,15 @@ public class Main extends JFrame {
     }
 
     public void draw(Graphics g) {
+        // lock to prevent update and draw from happening at the same time
+        this.redrawLock.lock();
+
         this.game.graphics = g;
         this.game.screenWidth = this.viewport.getWidth();
         this.game.screenHeight = this.viewport.getHeight();
         this.game.draw();
+
+        this.redrawLock.unlock();
     }
 
 
@@ -69,12 +76,18 @@ public class Main extends JFrame {
             double deltaTimeInSeconds = (deltaTimeInNanoseconds) / 1000000000; // convert nanoseconds to seconds
             // has 1/60th of a second passed?
             if (deltaTimeInSeconds > 1/60) {
+                // make sure draw is not happening while the game world is being updated
+                this.redrawLock.lock();
+
                 // update the game world
                 this.game.update(deltaTimeInSeconds);
+
                 // tell the viewport JPanel to paint, which will in turn cause this.draw to be called,
                 // which then calls this.game.draw (which draws all the game objects on the screen)
                 this.viewport.repaint();
+
                 this.lastUpdateTimeInNanoseconds = currentTimeInNanoseconds;
+                this.redrawLock.unlock();
             }
         }
     }
