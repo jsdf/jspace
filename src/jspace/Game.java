@@ -13,12 +13,12 @@ public class Game {
 	public int screenWidth = 800;
     // the screen height. this is set in the Main class
 	public int screenHeight = 600;
+    // time since the game started running. this is set in the Main class
+    public double time = 0;
 	// the keyboard keys currently pressed. this is set in the Main class
 	public HashSet<String> keysDown;
 	// to keep track of when the last enemy spawned, so we know if its time to spawn another
 	private double lastEnemySpawnTime = 0;
-	// time since the game started running
-	private double time = 0;
 	// a mapping of the types of game object to their images
 	private HashMap<GameObject.Type, BufferedImage> images;
 	// a list of all the game objects currently in the game world
@@ -61,8 +61,6 @@ public class Game {
 
     // this gets called 60 times a second, before this.draw()
 	public void update(double dt) {
-		this.time += dt;
-
         // to prevent the world from getting filled up with junk which is far off the screen,
         // we'll go through and check if each object is out of bounds, and then remove it if it is.
 		this.removeOutOfBoundsObjects();

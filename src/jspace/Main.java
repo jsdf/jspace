@@ -9,11 +9,14 @@ import java.util.concurrent.locks.*;
 
 public class Main extends JFrame {
     Game game;
-    double lastUpdateTimeInNanoseconds;
     JPanel viewport;
     KeyboardEventListener keyListener;
     HashSet<String> keysDown;
+    int fps = 0;
     private Lock redrawLock = new ReentrantLock();
+
+    static final int NANOSECONDS_IN_1SEC = 1000000000;
+    static final double NANOSECONDS_IN_1_60TH_OF_A_SEC = NANOSECONDS_IN_1SEC / 60;
 
     Main() {
         this.game = new Game();
@@ -57,7 +60,12 @@ public class Main extends JFrame {
 
 
     private void runGameMainLoop() {
-        this.lastUpdateTimeInNanoseconds = System.nanoTime();
+        double startTimeInNanoseconds = System.nanoTime();
+        double lastUpdateTimeInNanoseconds = startTimeInNanoseconds;
+        // used for the fps counter
+        int frameCounter = 0;
+        double frameStartTime = startTimeInNanoseconds;
+
         while (true) {
             try {
                 // sleep for about one millisecond. Note, it's *about* 1ms, not exactly 1ms, because
@@ -72,22 +80,29 @@ public class Main extends JFrame {
             // 'delta time' or 'dt' the time since the last time the game world was
             // updated and the view was rendered. it's useful for working out how much stuff should move
             // each time game.update is called
-            double deltaTimeInNanoseconds = currentTimeInNanoseconds - this.lastUpdateTimeInNanoseconds;
-            double deltaTimeInSeconds = (deltaTimeInNanoseconds) / 1000000000; // convert nanoseconds to seconds
+            double deltaTimeInNanoseconds = currentTimeInNanoseconds - lastUpdateTimeInNanoseconds;
             // has 1/60th of a second passed?
-            if (deltaTimeInSeconds > 1/60) {
+            if (deltaTimeInNanoseconds > NANOSECONDS_IN_1_60TH_OF_A_SEC) {
                 // make sure draw is not happening while the game world is being updated
                 this.redrawLock.lock();
 
                 // update the game world
-                this.game.update(deltaTimeInSeconds);
+                this.game.time = currentTimeInNanoseconds / NANOSECONDS_IN_1SEC; // nanoseconds to seconds
+                this.game.update(deltaTimeInNanoseconds / NANOSECONDS_IN_1SEC);
 
                 // tell the viewport JPanel to paint, which will in turn cause this.draw to be called,
                 // which then calls this.game.draw (which draws all the game objects on the screen)
                 this.viewport.repaint();
 
-                this.lastUpdateTimeInNanoseconds = currentTimeInNanoseconds;
+                lastUpdateTimeInNanoseconds = currentTimeInNanoseconds;
+                frameCounter++;
                 this.redrawLock.unlock();
+            }
+
+            if ((currentTimeInNanoseconds - frameStartTime) >= NANOSECONDS_IN_1SEC) {
+                this.fps = frameCounter;
+                frameStartTime += NANOSECONDS_IN_1SEC;
+                frameCounter = 0;
             }
         }
     }
@@ -102,6 +117,9 @@ public class Main extends JFrame {
         @Override
         public void paintComponent(Graphics g) {
             this.mainApp.draw(g);
+
+            g.setColor(Color.WHITE);
+            g.drawString("fps: " + String.valueOf(this.mainApp.fps), 10, 30);
         }
     }
 
