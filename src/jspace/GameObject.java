@@ -24,29 +24,8 @@ public class GameObject {
         this.type = type;
     }
 
-    // get the speed this thing can move, based on what type it is
+    // get the speed this thing can move
     public int getSpeed() {
-        switch (this.type) {
-            case player: return 150;
-            case ship1: return 30;
-            case ship2: return 50;
-            case ship3: return 60;
-            case ship4: return 40;
-            case enemy_projectile: return 200;
-            case player_projectile: return 200;
-        }
-        return 0;
-    }
-
-    // get the cooldown time before this thing can shoot again, based on what type it is
-    public double getCooldownTime() {
-        switch (this.type) {
-            case player: return 0.2;
-            case ship1: return 1;
-            case ship2: return 1;
-            case ship3: return 1;
-            case ship4: return 1;
-        }
         return 0;
     }
 
