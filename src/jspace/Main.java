@@ -60,11 +60,9 @@ public class Main extends JFrame {
 
 
     private void runGameMainLoop() {
-        double startTimeInNanoseconds = System.nanoTime();
-        double lastUpdateTimeInNanoseconds = startTimeInNanoseconds;
-        // used for the fps counter
+        double lastUpdateTimeInNanoseconds = System.nanoTime();
         int frameCounter = 0;
-        double frameStartTime = startTimeInNanoseconds;
+        double frameStartTime = lastUpdateTimeInNanoseconds;
 
         while (true) {
             try {
